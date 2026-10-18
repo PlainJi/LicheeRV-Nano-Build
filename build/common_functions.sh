@@ -232,12 +232,24 @@ function pack_upgrade
 
 function pack_burn_image
 {(
+  local board_path="$BUILD_PATH/boards/${CHIP_ARCH,,}/${CHIP}_${BOARD}"
+  local rndis_ipv4_address_file="$board_path/rndis.ipv4_address"
   pushd "$OUTPUT_DIR"
   [ -d tmp ] && rm -rf tmp
 
   # # genimage
   export PATH=${TOP_DIR}/build/tools/common/sd_tools:${PATH}
   export LD_LIBRARY_PATH=$TOP_DIR/build/tools/common/sd_tools/libconfuse/lib:${LD_LIBRARY_PATH}
+  if [ -r "$rndis_ipv4_address_file" ]; then
+    export RNDIS_IPV4_ADDRESS_FILE="$rndis_ipv4_address_file"
+  else
+    unset RNDIS_IPV4_ADDRESS_FILE
+  fi
+  if [ -d "$board_path" ]; then
+    export RNDIS_BOOT_MARKER_DIR="$board_path"
+  else
+    unset RNDIS_BOOT_MARKER_DIR
+  fi
   $COMMON_TOOLS_PATH/sd_tools/sd_gen_burn_image_rootless.sh $OUTPUT_DIR
   popd
 )}

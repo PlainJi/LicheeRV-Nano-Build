@@ -226,7 +226,7 @@
 
 		led-user {
 			gpios = <&porta 14 GPIO_ACTIVE_HIGH>;
-			linux,default-trigger = "activity";
+                        linux,default-trigger = "timer";
 		};
 	};
 

@@ -29,6 +29,21 @@ cp -fv ${output_dir}/rawimages/rootfs.sd ${output_dir}/input/
 touch ${output_dir}/input/usb.dev
 touch ${output_dir}/input/usb.ncm
 touch ${output_dir}/input/usb.rndis
+if [ -n "${RNDIS_IPV4_ADDRESS_FILE:-}" ] && [ -r "${RNDIS_IPV4_ADDRESS_FILE}" ]
+then
+        cp -fv "${RNDIS_IPV4_ADDRESS_FILE}" ${output_dir}/input/rndis.ipv4_address
+else
+        touch ${output_dir}/input/rndis.ipv4_address
+fi
+for rndis_marker in usb.rndis.host_mac usb.rndis.dev_mac
+do
+        if [ -n "${RNDIS_BOOT_MARKER_DIR:-}" ] && [ -r "$RNDIS_BOOT_MARKER_DIR/$rndis_marker" ]
+        then
+                cp -fv "$RNDIS_BOOT_MARKER_DIR/$rndis_marker" "${output_dir}/input/$rndis_marker"
+        else
+                touch "${output_dir}/input/$rndis_marker"
+        fi
+done
 touch ${output_dir}/input/wifi.sta
 touch ${output_dir}/input/gt9xx
 touch ${output_dir}/input/fb

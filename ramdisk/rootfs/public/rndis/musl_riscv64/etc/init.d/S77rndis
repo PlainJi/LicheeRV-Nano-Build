@@ -9,7 +9,7 @@ case "$1" in
     /etc/run_usb.sh probe rndis
     /etc/run_usb.sh start
     ifconfig usb0 up
-    ifconfig usb0 169.254.250.73
+    ifconfig usb0 192.168.1.9 netmask 255.255.255.0
     [ $? = 0 ] && echo "OK" || echo "FAIL"
   ;;
   stop)

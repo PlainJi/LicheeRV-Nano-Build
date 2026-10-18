@@ -46,6 +46,11 @@ start() {
 			echo "rndis mac address: ${new_rndismac}"
 
 			# dhcp
+			if [ -e /boot/rndis.ipv4_address ]
+			then
+				rndis_ipv4_address=$(cat /boot/rndis.ipv4_address)
+				ipv4_prefix=${rndis_ipv4_address%.*}
+			fi
 			if [ ! -e /boot/rndis.nodhcpd ]
 			then
 				if [ -e /boot/rndis.ipv4_prefix ]
@@ -70,7 +75,7 @@ start() {
 					ipv4_prefix=10.$id2.$id3
 				fi
 				gen_udhcpd_conf $rndis_ifname "${ipv4_prefix}"  > /etc/udhcpd.${rndis_ifname}.conf
-				ip addr add $ipv4_prefix.1/24 dev $rndis_ifname
+				ip addr add ${rndis_ipv4_address:-$ipv4_prefix.1}/24 dev $rndis_ifname
 				udhcpd -S /etc/udhcpd.${rndis_ifname}.conf
 			fi
 			echo "RNDIS DHCP OK"

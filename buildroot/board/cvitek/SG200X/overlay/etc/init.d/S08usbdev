@@ -119,6 +119,8 @@ then
 		if [ -e /boot/usb.rndis ]
 		then
 			mkdir -p functions/rndis.usb0
+                        [ -e /boot/usb.rndis.host_mac ] && cat /boot/usb.rndis.host_mac > functions/rndis.usb0/host_addr
+                        [ -e /boot/usb.rndis.dev_mac ] && cat /boot/usb.rndis.dev_mac > functions/rndis.usb0/dev_addr
 			ln -s functions/rndis.usb0 configs/c.1/
 			echo e0 > functions/rndis.usb0/class
 			echo 01 > functions/rndis.usb0/subclass
